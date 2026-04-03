@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: module6-app
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Dilraj06/module_6_part3gitops.git
+    targetRevision: main
+    path: k8s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
