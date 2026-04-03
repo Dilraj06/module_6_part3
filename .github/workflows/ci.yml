@@ -53,10 +53,10 @@ jobs:
 
       - name: Update image tags in gitops repo
         run: |
-          sed -i "s|ghcr.io/dilraj06/module_6_part3-backend:.*|ghcr.io/dilraj06/module_6_part3-backend:${IMAGE_TAG}|g" gitops-repo/k8s/backend-deployment.yaml
-          sed -i "s|ghcr.io/dilraj06/module_6_part3-studentportfolio:.*|ghcr.io/dilraj06/module_6_part3-studentportfolio:${IMAGE_TAG}|g" gitops-repo/k8s/studentportfolio-deployment.yaml
-          sed -i "s|ghcr.io/dilraj06/module_6_part3-transactions:.*|ghcr.io/dilraj06/module_6_part3-transactions:${IMAGE_TAG}|g" gitops-repo/k8s/transactions-deployment.yaml
-          sed -i "s|ghcr.io/dilraj06/module_6_part3-syncer:.*|ghcr.io/dilraj06/module_6_part3-syncer:${IMAGE_TAG}|g" gitops-repo/k8s/syncer-deployment.yaml
+          sed -i "s|ghcr.io/dilraj06/module_6_part3-backend:.*|ghcr.io/dilraj06/module_6_part3-backend:${IMAGE_TAG}|g" gitops-repo/k8s/10-backend-deployment.yaml
+          sed -i "s|ghcr.io/dilraj06/module_6_part3-studentportfolio:.*|ghcr.io/dilraj06/module_6_part3-studentportfolio:${IMAGE_TAG}|g" gitops-repo/k8s/30-studentportfolio-deployment.yaml
+          sed -i "s|ghcr.io/dilraj06/module_6_part3-transactions:.*|ghcr.io/dilraj06/module_6_part3-transactions:${IMAGE_TAG}|g" gitops-repo/k8s/20-transactions-deployment.yaml
+          sed -i "s|ghcr.io/dilraj06/module_6_part3-syncer:.*|ghcr.io/dilraj06/module_6_part3-syncer:${IMAGE_TAG}|g" gitops-repo/k8s/22-transactions-sync-deployment.yaml
 
       - name: Commit and push updated manifests
         run: |
