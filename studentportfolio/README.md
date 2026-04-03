@@ -1,32 +1,5 @@
-# Module 6 Part 3 Project
+# Studentportfoliotemplate
 
-Name: Dilraj Kaur 
-Course: COMP-4001  
-Project: CI/CD + GitOps Deployment  
+# This is a template for student portfolio website.
 
-## Project Description
-This project demonstrates a complete CI/CD pipeline integrated with GitOps using Argo CD and Kubernetes.
-
-The system includes:
-- Frontend (Student Portfolio)
-- Backend API
-- Transactions Service
-- Syncer Service
-- MongoDB Database
-- Nginx Reverse Proxy
-
-## Technologies Used
-- Docker
-- Kubernetes
-- GitHub Actions (CI/CD)
-- Argo CD (GitOps)
-- Helm
-
-## Features
-- Automated image build and push
-- GitOps-based deployment
-- Automatic sync and self-healing
-- Microservices architecture
-
-## Author
-Dilraj Kaur
+# All students must make modifications and use their images on the portfolio website to show that the you can do rapid development and rapid deployment for the purpose of the dev ops course we intend to use this for.
