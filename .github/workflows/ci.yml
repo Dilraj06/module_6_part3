@@ -1,0 +1,68 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
+
+      - name: Build backend image
+        run: docker build -t ghcr.io/Dilraj Kaur/module_6_part3-backend:${IMAGE_TAG} ./backend
+
+      - name: Build studentportfolio image
+        run: docker build -t ghcr.io/Dilraj Kaur/module_6_part3-studentportfolio:${IMAGE_TAG} ./studentportfolio
+
+      - name: Build transactions image
+        run: docker build -t ghcr.io/DilrajKaur/module_6_part3-transactions:${IMAGE_TAG} ./transactions
+
+      - name: Build syncer image
+        run: docker build -t ghcr.io/DilrajKaur/module_6_part3-syncer:${IMAGE_TAG} ./syncer
+
+      - name: Push backend image
+        run: docker push ghcr.io/Dilraj Kaur/module_6_part3-backend:${IMAGE_TAG}
+
+      - name: Push studentportfolio image
+        run: docker push ghcr.io/Dilraj Kaur/module_6_part3-studentportfolio:${IMAGE_TAG}
+
+      - name: Push transactions image
+        run: docker push ghcr.io/Dilraj Kaur/module_6_part3-transactions:${IMAGE_TAG}
+
+      - name: Push syncer image
+        run: docker push ghcr.io/Dilraj Kaur/module_6_part3-syncer:${IMAGE_TAG}
+
+      - name: Clone gitops repo
+        run: |
+          git clone https://x-access-token:${{ secrets.GITOPS_PAT }}@github.com/${{ secrets.GITOPS_REPO }} gitops-repo
+
+      - name: Update image tags in gitops repo
+        run: |
+          sed -i "s|ghcr.io/Dilraj Kaur/module_6_part3-backend:.*|ghcr.io/Dilraj Kaur/module_6_part3-backend:${IMAGE_TAG}|g" gitops-repo/k8s/backend-deployment.yaml
+          sed -i "s|ghcr.io/Dilraj Kaur/module_6_part3-studentportfolio:.*|ghcr.io/Dilraj Kaur/module_6_part3-studentportfolio:${IMAGE_TAG}|g" gitops-repo/k8s/studentportfolio-deployment.yaml
+          sed -i "s|ghcr.io/Dilraj Kaur/module_6_part3-transactions:.*|ghcr.io/Dilraj Kaur/module_6_part3-transactions:${IMAGE_TAG}|g" gitops-repo/k8s/transactions-deployment.yaml
+          sed -i "s|ghcr.io/Dilraj Kaur/module_6_part3-syncer:.*|ghcr.io/Dilraj Kaur/module_6_part3-syncer:${IMAGE_TAG}|g" gitops-repo/k8s/syncer-deployment.yaml
+
+      - name: Commit and push updated manifests
+        run: |
+          cd gitops-repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Update image tags to ${IMAGE_TAG}" || echo "No changes to commit"
+          git push
